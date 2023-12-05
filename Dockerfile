@@ -1,7 +1,8 @@
 # ---- Base Node ----
-FROM node:19-alpine AS base
+FROM node:20-alpine3.17 AS base
 WORKDIR /app
 COPY package*.json ./
+RUN apk update && apk upgrade
 
 # ---- Dependencies ----
 FROM base AS dependencies
@@ -13,7 +14,7 @@ COPY . .
 RUN npm run build
 
 # ---- Production ----
-FROM node:19-alpine AS production
+FROM node:20-alpine3.17 AS production
 WORKDIR /app
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY --from=build /app/.next ./.next
