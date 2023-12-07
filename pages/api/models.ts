@@ -20,16 +20,11 @@ const handler = async (req: Request): Promise<Response> => {
     const response = await fetch(url, {
       headers: {
         'Content-Type': 'application/json',
-        ...(OPENAI_API_TYPE === 'openai' && {
-          Authorization: `Bearer ${key ? key : process.env.OPENAI_API_KEY}`
-        }),
         ...(OPENAI_API_TYPE === 'azure' && {
           'api-key': `${key ? key : process.env.OPENAI_API_KEY}`
         }),
-        ...((OPENAI_API_TYPE === 'openai' && OPENAI_ORGANIZATION) && {
-          'OpenAI-Organization': OPENAI_ORGANIZATION,
-        }),
       },
+      credentials: 'omit' ,// Explicitly omit credentials on cross-origin requests
     });
 
     if (response.status === 401) {
@@ -47,6 +42,9 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const json = await response.json();
+
+
+    console.log("this is the json returned from azure", json)
 
     const models: OpenAIModel[] = json.data
       .map((model: any) => {
