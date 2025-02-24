@@ -71,12 +71,55 @@ When deploying the application, the following environment variables can be set:
 | DEFAULT_MODEL                     | `gpt-3.5-turbo`                | The default model to use on new conversations, for Azure use `gpt-35-turbo`                                                               |
 | NEXT_PUBLIC_DEFAULT_SYSTEM_PROMPT | [see here](utils/app/const.ts) | The default system prompt to use on new conversations                                                                                     |
 | NEXT_PUBLIC_DEFAULT_TEMPERATURE   | 1                              | The default temperature to use on new conversations                                                                                       |
-| GOOGLE_API_KEY                    |                                | See [Custom Search JSON API documentation][GCSE]                                                                                          |
-| GOOGLE_CSE_ID                     |                                | See [Custom Search JSON API documentation][GCSE]                                                                                          |
 
-If you do not provide an OpenAI API key with `OPENAI_API_KEY`, users will have to provide their own key.
 
-If you don't have an OpenAI API key, you can get one [here](https://platform.openai.com/account/api-keys).
+
+
+  - Chat.tsx: Main chat interface that displays messages and handles API communication
+  - ChatInput.tsx: Text input for user messages
+  - ChatMessage.tsx: Renders individual messages (user/AI)
+  - MemoizedChatMessage.tsx: Performance-optimized message display
+  - ModelSelect.tsx: AI model selection dropdown
+  - SystemPrompt.tsx: Controls prompt that guides model behavior
+  - Temperature.tsx: Adjusts model temperature parameter
+
+  Navigation Components
+
+  - Chatbar/: Left sidebar for conversation history
+    - Uses context for state management
+    - Handles conversation operations (create, delete, export)
+  - Sidebar/: Reusable sidebar container
+  - Promptbar/: Right sidebar for managing reusable prompts
+    - Context-based state management
+    - Organizes prompts in folders
+
+  State Management
+
+  - Uses React Context API for state
+  - HomeContext: Manages conversations, settings, and UI state
+  - ChatbarContext: Handles conversation list
+  - PromptbarContext: Manages saved prompts
+  - Custom reducer pattern for predictable state updates
+
+  Data Flow
+
+  1. User types in ChatInput
+  2. Message sent to Chat component
+  3. API request created with message, model, settings
+  4. Request sent to Next.js endpoint
+  5. Response streamed from Azure OpenAI
+  6. Messages updated in real-time
+  7. Conversation saved to localStorage
+
+  Azure Integration
+
+  - Configurable via environment variables
+  - Supports Azure-specific authentication
+  - Uses deployment IDs for model selection
+  - API calls handled via streaming for real-time responses
+
+
+
 
 ## Contact
 
